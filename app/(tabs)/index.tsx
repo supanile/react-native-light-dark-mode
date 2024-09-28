@@ -1,70 +1,55 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React from 'react';
+import { StatusBar } from 'expo-status-bar';
+import { useColorScheme } from 'nativewind';
+import { Text, View, TouchableOpacity } from 'react-native';
+import { styled } from 'nativewind';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// Create styled components
+const StyledView = styled(View);
+const StyledText = styled(Text);
+const StyledTouchableOpacity = styled(TouchableOpacity);
 
-export default function HomeScreen() {
+const DarkModeToggle = ({ isDark, onToggle }) => (
+  <StyledTouchableOpacity
+    onPress={onToggle}
+    className="flex-row items-center bg-gray-200 dark:bg-gray-700 p-1 rounded-full w-20 h-10"
+  >
+    <StyledView 
+      className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ease-in-out transform ${
+        isDark ? 'translate-x-10 bg-gray-800' : 'translate-x-0 bg-white'
+      }`}
+    >
+      <StyledText className={isDark ? 'text-gray-200' : 'text-yellow-400'}>
+        {isDark ? '🌙' : '☀️'}
+      </StyledText>
+    </StyledView>
+  </StyledTouchableOpacity>
+);
+
+export default function App() {
+  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const isDark = colorScheme === 'dark';
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <StyledView className="flex-1 bg-gray-100 dark:bg-neutral-900">
+      <StatusBar style={isDark ? "light" : "dark"} />
+      
+      <StyledView className="flex-1 justify-center items-center">
+        <StyledView className="items-center space-y-4">
+          <DarkModeToggle isDark={isDark} onToggle={toggleColorScheme} />
+          <StyledText className="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
+            {isDark ? 'Dark Mode' : 'Light Mode'}
+          </StyledText>
+        </StyledView>
+      </StyledView>
+      
+      <StyledView className="flex-1 justify-center items-center px-4">
+        <StyledText className="text-center mb-8 text-gray-700 dark:text-gray-300">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.
+        </StyledText>
+        
+        <StyledView className="h-40 w-full bg-gradient-to-r from-blue-400 to-purple-500 dark:from-indigo-500 dark:to-purple-600 rounded-lg shadow-lg" />
+      </StyledView>
+    </StyledView>
   );
 }
-
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
